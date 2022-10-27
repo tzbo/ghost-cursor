@@ -39,7 +39,7 @@ export interface GhostCursor {
     selector: string | ElementHandle,
     options?: MoveOptions
   ) => Promise<void>
-  moveTo: (destination: Vector) => Promise<void>
+  moveTo: (destination: Vector, optionsOrSpread?: number | PathOptions) => Promise<void>
 }
 
 // Helper function to wait a specified number of milliseconds
@@ -68,8 +68,8 @@ const getRandomBoxPoint = (
 
   if (
     options?.paddingPercentage !== undefined &&
-    options?.paddingPercentage > 0 &&
-    options?.paddingPercentage < 100
+        options?.paddingPercentage > 0 &&
+        options?.paddingPercentage < 100
   ) {
     paddingWidth = (width * options.paddingPercentage) / 100
     paddingHeight = (height * options.paddingPercentage) / 100
@@ -123,9 +123,9 @@ const getElementBox = async (
     if (!relativeToMainFrame) {
       const elementFrame = await element.contentFrame()
       const iframes =
-        elementFrame != null
-          ? await elementFrame.parentFrame()?.$x('//iframe')
-          : null
+                elementFrame != null
+                  ? await elementFrame.parentFrame()?.$x('//iframe')
+                  : null
       let frame: ElementHandle<Node> | undefined
       if (iframes != null) {
         for (const iframe of iframes) {
@@ -135,9 +135,9 @@ const getElementBox = async (
       if (frame != null) {
         const boundingBox = await frame.boundingBox()
         elementBox.x =
-          boundingBox !== null ? elementBox.x - boundingBox.x : elementBox.x
+                    boundingBox !== null ? elementBox.x - boundingBox.x : elementBox.x
         elementBox.y =
-          boundingBox !== null ? elementBox.y - boundingBox.y : elementBox.y
+                    boundingBox !== null ? elementBox.y - boundingBox.y : elementBox.y
       }
     }
 
@@ -184,9 +184,9 @@ const shouldOvershoot = (a: Vector, b: Vector): boolean =>
 const intersectsElement = (vec: Vector, box: BoundingBox): boolean => {
   return (
     vec.x > box.x &&
-    vec.x <= box.x + box.width &&
-    vec.y > box.y &&
-    vec.y <= box.y + box.height
+        vec.x <= box.x + box.width &&
+        vec.y > box.y &&
+        vec.y <= box.y + box.height
   )
 }
 
@@ -254,8 +254,8 @@ export const createCursor = (
         await delay(Math.random() * 2000) // 2s by default
       }
       randomMove().then(
-        (_) => {},
-        (_) => {}
+        (_) => { },
+        (_) => { }
       ) // fire and forget, recursive function
     } catch (_) {
       console.debug('Warning: stopping random mouse movements')
@@ -326,7 +326,7 @@ export const createCursor = (
           }
           if (elem === null) {
             throw new Error(
-              `Could not find element with selector "${selector}", make sure you're waiting for the elements with "puppeteer.waitForSelector"`
+                            `Could not find element with selector "${selector}", make sure you're waiting for the elements with "puppeteer.waitForSelector"`
             )
           }
         } else {
@@ -385,9 +385,9 @@ export const createCursor = (
       }
       return await go(0)
     },
-    async moveTo (destination: Vector): Promise<void> {
+    async moveTo (destination: Vector, optionsOrSpread?: number | PathOptions): Promise<void> {
       actions.toggleRandomMove(false)
-      await tracePath(path(previous, destination))
+      await tracePath(path(previous, destination, optionsOrSpread))
       actions.toggleRandomMove(true)
     }
   }
@@ -395,8 +395,8 @@ export const createCursor = (
   // Start random mouse movements. Do not await the promise but return immediately
   if (performRandomMoves) {
     randomMove().then(
-      (_) => {},
-      (_) => {}
+      (_) => { },
+      (_) => { }
     )
   }
 

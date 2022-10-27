@@ -97,19 +97,19 @@ async function installMouseHelper (page: Page): Promise<void> {
         true
       )
       /* eslint-disable */
-      function updateButtons(buttons) {
-        for (let i = 0; i < 5; i++) {
-          // @ts-ignore
-          box.classList.toggle("button-" + String(i), buttons & (1 << i));
+            function updateButtons(buttons) {
+                for (let i = 0; i < 5; i++) {
+                    // @ts-ignore
+                    box.classList.toggle("button-" + String(i), buttons & (1 << i));
+                }
+            }
+        };
+        if (document.readyState !== "loading") {
+            attachListener();
+        } else {
+            window.addEventListener("DOMContentLoaded", attachListener, false);
         }
-      }
-    };
-    if (document.readyState !== "loading") {
-      attachListener();
-    } else {
-      window.addEventListener("DOMContentLoaded", attachListener, false);
-    }
-  });
+    });
 }
 
 export default installMouseHelper;
